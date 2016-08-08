@@ -3,25 +3,29 @@ package com.arcsoft.closeli.qrencode;
 import android.graphics.Bitmap;
 
 /**
- * Created by robin on 8/8/16.
+ * 通过libqrencode生成二维码
  */
 public class QREncode {
-    public QREncode() {
-    }
 
+    /**
+     * 生成二维码
+     * @param content 需要生成的内容
+     * @param width 二维码宽高
+     * @return 包含二维码的Bitmap
+     * @throws Exception
+     */
     public Bitmap createQRCodeBitmap(String content, int width) throws Exception {
         int origWidth = nativeInit(content);
         if (origWidth < 0) {
-            throw new Exception("Can't get QRCode original width");
+            throw new Exception("Can't get original QRCode width");
         }
 
         Bitmap origBitmap = Bitmap.createBitmap(origWidth, origWidth, Bitmap.Config.ARGB_8888);
         int ret = nativeCreateQRCodeBitmap(origBitmap);
         if (ret < 0) {
-            throw new Exception("Can't get QRCode original bitmap");
+            throw new Exception("Can't get original QRCode bitmap");
         }
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(origBitmap, width, width, false);
-
         nativeFinalize();
 
         return scaledBitmap;
