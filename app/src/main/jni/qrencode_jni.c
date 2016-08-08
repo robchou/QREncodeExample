@@ -11,8 +11,8 @@ QRcode *qrcode;
 static const int MARGIN = 2;
 static const int BYTES_PER_PIXEL = 4;
 
-const unsigned char bg_color[BYTES_PER_PIXEL] = { 0xff, 0xff, 0xff, 0xff };
-const unsigned char fg_color[BYTES_PER_PIXEL] = { 0, 0, 0, 0xff };
+const unsigned char bg_color[4] = { 0xff, 0xff, 0xff, 0xff };
+const unsigned char fg_color[4] = { 0, 0, 0, 0xff };
 
 JNIEXPORT jint JNICALL
 Java_com_arcsoft_closeli_qrencode_QREncode_nativeInit(JNIEnv *env, jobject instance,
@@ -56,13 +56,14 @@ Java_com_arcsoft_closeli_qrencode_QREncode_nativeCreateQRCodeBitmap(JNIEnv *env,
     memset(row, 0xff, info.width * BYTES_PER_PIXEL);
 
     /* top margin */
-    for (int y = 0; y < MARGIN; ++y) {
+    int x, y;
+    for (y = 0; y < MARGIN; ++y) {
         memcpy(&line[y * info.width * BYTES_PER_PIXEL], row, info.width * BYTES_PER_PIXEL);
     }
 
-    for (int y = 0; y < qrcode->width; ++y) {
+    for (y = 0; y < qrcode->width; ++y) {
         memset(row, 0xff, info.width * BYTES_PER_PIXEL);
-        for (int x = 0; x < qrcode->width; ++x) {
+        for (x = 0; x < qrcode->width; ++x) {
             if (*p & 1) {
                 memcpy(&row[(x + MARGIN) * BYTES_PER_PIXEL], fg_color, BYTES_PER_PIXEL);
             }
